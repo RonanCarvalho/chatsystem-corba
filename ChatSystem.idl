@@ -1,0 +1,58 @@
+typedef sequence <long long, 100> ClientsInRoomList;
+
+struct Room {
+
+	string roomName;
+	ClientsInRoomList clientsInRoomList;
+	long clientsJoined;
+	long fileIndex;
+};
+
+interface RoomInter{
+
+	Room getAllState();
+};
+
+
+typedef sequence <RoomInter, 100> RoomList;
+
+interface Listener {
+
+	string getUserName();
+	void setUserName(in string userName);
+
+	boolean getAuthenticated();
+	void setAuthenticated(in boolean status);
+
+	long long getClientId();
+	void message(in string userName, in string msg);
+	void recievePreviousMsg(in string msg);
+};
+
+
+struct ChatClient {
+
+	long long clientId;
+	string currentRoom;
+	Listener listener;
+};
+
+interface ChatServer {
+	exception TooManyClientsException{};
+	exception TooManyRoomsException{};
+
+	readonly attribute long nextClientId;
+
+	ChatClient registerClient(in ChatClient newClient) raises (TooManyClientsException);
+	boolean authenticate(in string passwordAttempt);
+	RoomInter newRoom(in Room newroom) raises (TooManyRoomsException);
+	RoomList getRoomList();
+	long long getNumberOfRooms();
+	void setCurrentRoom(in long long clientId, in string currentRoom);
+	void joinRoom(in string roomName, in long long clientId);
+	long long getNumberOfClientsInRoom(in long long clientId);
+	void previousMsg(in long long clientId);
+	void leaveRoom(in long long clientId);
+	void recieveMsg(in string userName, in long long clientId, in string msg);
+	void exitClient(in long long clientId);
+};
