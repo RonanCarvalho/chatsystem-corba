@@ -8,13 +8,14 @@ Centralized server provides chat room services to clients.
 Open a terminal on server machine:
 
     cd git/chatsystem-corba/
+    javac *.java classes/*.java classes/ChatServerPackage/*.java
     idlj -fall -td classes/ ChatSystem.idl
     orbd -ORBInitialPort 1050 -ORBInitialHost localhost &
     java -classpath classes/ Server -ORBInitialPort 1050
     
 On client machine:
 
-    java -classpath classes/ Client -ORBInitialPort 1050
+    java -classpath .:classes/ Client -ORBInitialPort 1050
     
 ##Architecture
 
